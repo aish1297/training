@@ -1,0 +1,7 @@
+.address-info-container {
+    position: absolute;
+    height : 50%;
+    width : 100%;
+    background-color: thistle;
+    top : 50%;
+}

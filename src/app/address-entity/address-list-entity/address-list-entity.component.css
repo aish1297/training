@@ -1,0 +1,19 @@
+.address-list-container {
+    position: absolute;
+    height : 50%;
+    width : 100%;
+    float : left;
+    background-color : lightgrey;
+    top : 0;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+.button-style {
+    top : 50%;
+    position : absolute;
+    left : 20%;
+}
+  

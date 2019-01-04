@@ -1,0 +1,12 @@
+.entity-container {
+  position: absolute;
+  width  : 20%;
+  height : 100%;
+  float  : left;
+  background-color: lightblue;
+}
+
+.button-style {
+  position : absolute;
+  left : 20%;
+}

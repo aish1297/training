@@ -1,0 +1,6 @@
+<!-- <app-header></app-header> -->
+<div class="root">
+ <app-entity (entitySelected)="entitySelected($event)"></app-entity>
+ <app-person-entity *ngIf="isPerson"></app-person-entity>
+ <app-address-entity *ngIf="isAddress"></app-address-entity>
+</div>

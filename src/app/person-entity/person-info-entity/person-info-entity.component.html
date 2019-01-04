@@ -1,0 +1,41 @@
+<div class="person-info-container">
+  <h3>Please fill in your details</h3>
+    <div>
+      Id:<br>
+      <input id="personId"
+             type="number"
+             [(ngModel)]="personInfo.id" >
+      <br>
+      First_Name:<br>
+      <input id="firstName"
+             type="text"
+             [(ngModel)]="personInfo.firstname" >
+      <br>
+      Last_Name:<br>
+      <input id="lastName"
+             type="text"
+             [(ngModel)]="personInfo.lastname" >
+      <br>
+      Email:<br>
+      <input id="email"
+             type="text"
+             [(ngModel)]="personInfo.email" >
+      <br>
+      Birth_Date:<br>
+      <input id="birthDate"
+             type="text"
+             [(ngModel)]="personInfo.birth_date" >
+      <br>
+      Created_Date:<br>
+
+      <input id="createdDate"
+             type="text" disabled
+             [(ngModel)]="personInfo.created_date" >
+      <br>
+      Is_Admin:<br>
+      <input id="isAdmin"
+             type="boolean"
+             [(ngModel)]="personInfo.is_admin" >
+      <br>
+    </div>
+</div>

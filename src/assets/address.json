@@ -1,0 +1,25 @@
+[ {
+    "id" : 1,
+    "street" : "sushine",
+    "city" : "chennai",
+    "postalCode" : "600010"
+  }, 
+  {
+    "id" : 2,
+    "street" : "santa",
+    "city" : "chennai",
+    "postalCode" : "600102"
+  },
+    {
+    "id" : 3,
+    "street" : "zara",
+    "city" : "chennai",
+    "postalCode" : "600045"
+  },
+  {
+    "id" : 4,
+    "street" : "paris",
+    "city" : "chennai",
+    "postalCode" : "600033"
+  }
+]

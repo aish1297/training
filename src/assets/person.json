@@ -1,0 +1,36 @@
+[ {
+    "id"  : 1,
+    "firstname" : "aishwarya",
+    "lastname" : "manivannan",
+    "email" : "aish@gmail.com",
+    "birth_date" : "12-05-1997",
+    "created_date" : "10:13:31",
+    "is_admin" : 1
+  }, 
+  {
+    "id"  : 2,
+    "firstname" : "baalachandar",
+    "lastname" : "arumugam",
+    "email" : "baala@gmail.com",
+    "birth_date" : "18-07-1996",
+    "created_date" : "11:12:11",
+    "is_admin" : 1
+  },
+  {
+    "id"  : 3,
+    "firstname" : "naznin",
+    "lastname" : "aakash",
+    "email" : "naz@gmail.com",
+    "birth_date" : "14-07-1996",
+    "created_date" : "12:13:21",
+    "is_admin" : 1
+  },
+    {
+    "id"  : 4,
+    "firstname" : "sujitha",
+    "lastname" : "venkat",
+    "email" : "suji@gmail.com",
+    "birth_date" : "11-11-1996",
+    "created_date" : "13:12:11",
+    "is_admin" : 1
+  } ]

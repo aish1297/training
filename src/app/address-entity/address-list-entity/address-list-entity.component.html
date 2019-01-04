@@ -1,0 +1,17 @@
+<div class="address-list-container">
+    <table>
+        <tr>
+          <th>ID</th>
+          <th>STREET</th>
+          <th>CITY</th>
+          <th>POSTAL-CODE</th>
+       </tr>
+       <tr *ngFor = "let addressData of address"  (click)="OnRowClick(addressData)">
+           <td>{{ addressData.id }}</td>
+           <td>{{ addressData.street }}</td>
+           <td>{{ addressData.city }}</td>
+           <td>{{ addressData.postalCode }}</td>
+       </tr>
+    </table>
+    <button id="addItem" class="button-style" (click)="onAddSelect($event)">Add</button>
+</div>

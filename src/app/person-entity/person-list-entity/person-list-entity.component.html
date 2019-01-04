@@ -1,0 +1,23 @@
+<div class="person-list-container">
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>FIRST-NAME</th>
+      <th>LAST-NAME</th>
+      <th>EMAIL</th>
+      <th>BIRTH-DATE</th>
+      <th>CREATED-DATE</th>
+      <th>IS-ADMIN</th>
+    </tr>
+    <tr *ngFor = "let personData of person" (click)="OnRowClick(personData)">
+      <td>{{ personData.id }}</td>
+      <td>{{ personData.firstname }}</td>
+      <td>{{ personData.lastname }}</td>
+      <td>{{ personData.email }}</td>
+      <td>{{ personData.birth_date }}</td>
+      <td>{{ personData.created_date }}</td>
+      <td>{{ personData.is_admin }}</td>
+    </tr>
+  </table>
+  <button id="addItem" class="button-style">Add</button>
+</div>
