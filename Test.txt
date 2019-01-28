@@ -146,7 +146,7 @@ public class Test {
         {
         j=j+m;
         }
-            for (int j = 0; j < questions[i].length; j++) {
+            for (int j; j < questions[i].length; j++) {
                 System.out.println(questions[i][j].question); // to print the question in the console
                 userAnswer = input.next(); // to store the input from the user in a variable userAnswer
 
@@ -197,7 +197,7 @@ public class Test {
         {
         j=j+c;
         }
-            for (int j = 0; j < questions[i].length; j++) {
+            for (int j ; j < questions[i].length; j++) {
                 System.out.println(questions[i][j].question); // to print the question in the console
                 userAnswer = input.next(); // to store the input from the user in a variable userAnswer
 
