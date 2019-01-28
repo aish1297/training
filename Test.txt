@@ -6,10 +6,21 @@ public class Test {
 
     public static void main(String[] args) {
 
+
         // initialized totalCount to be zero
         int totalCount = 0;
+        //to use in the for loop 
+        //i for indexing the question 
+        //j for number of question
+        int i,j;
         // r is for the worst case , like when we call for  twice the simple or twice the complex
         int r = 0;
+        //To move to the right question of an array(moderate,complex,simple)
+        int c = 0;
+        int m = 0;
+        int s = 0;
+        //to give Mark to hardness of the question 
+        int marks = 2;
         
 
         // collected all questions from the Question Interface created
@@ -24,6 +35,8 @@ public class Test {
         Scanner input = new Scanner(System.in);
 
         //created array of simple,moderate and complex to create questions along with the correct answers
+        //if you want to add quesions into array add but you have to change values of the  grades accordingly and change the value of 
+        // r to r < no of question +1  eg (for now question r<3)
         QuestionCreator[] simpleQuestions   = { new QuestionCreator(simpleQuestion1, "a"),
                                                 new QuestionCreator(simpleQuestion2, "a") };
         QuestionCreator[] moderateQuestions = { new QuestionCreator(moderateQuestion1, "b"),
@@ -40,12 +53,27 @@ public class Test {
         totalCount = takeModerate(q1, input, totalCount);
 
         // depending on the total count the grade is displayed,so a else if block is added
-        if (totalCount == 3) {
+        //please change marks and totalcount value according to no of questions 
+       
+       if (totalCount == 3 && (marks=18)) {
+            //marks here will mostly be 6 * no of questions attended
             System.out.println("Your grade is HD");
-        } else if (totalCount == 2 || totalCount == 1) {
+        } 
+        else if ((totalCount == 2)&&((marks >= 10 && marks <= 12))) 
+        {
             System.out.println("Your grade is D");
-        } else
+            }
+            else if ((totalCount == 2 || totalCount == 1)&&((marks >= 6 && marks <= 8))) 
+            {
             System.out.println("Your grade is C");
+              } 
+              else if (( totalCount == 1)&&((marks = 4)))
+              {
+               
+            System.out.println("Your grade is P");
+        } 
+        else
+            System.out.println("Your grade is F");
     }
 
     // takeSimple method is defined with questions , input and the count as parameters
@@ -55,27 +83,40 @@ public class Test {
         int simpleCount = count;
         // create a variable for storing userAnswer
         String userAnswer;
-        if(r==3)
+       
+      
+        for ( i = 0; i < 1; i++) {
+        //change r according to no of question to be answered, this is to eliminate worst case
+         if(r==3)
         {
         return simpleCount;
         }
-        for (int i = 0; i < 1; i++) {
-            for (int j = 0; j < questions[i].length; j++) {
+        if (s==0)
+        {
+        j=0;
+        }
+        else
+        {
+        j=j+s;
+        }
+            for ( j ; j < questions[i].length; j++) {
                 System.out.println(questions[i][j].question); // to print the question in the console
                 userAnswer = input.next(); // to store the input from the user in a variable userAnswer
 
 //                to compare the userAnswer and the correct answer of the question .equalsIgnoreCase is used(as even if the user enters
 //                the option in capital letters the answer gets compared with the userAnswer)
                 if (questions[i][j].answer.equalsIgnoreCase(userAnswer)) {
+                marks = marks + 2;
                     simpleCount++; // increment the simpleCount if the answer is correct
                     r++;
+                    s=s+1;
                      moderateCount = takeModerate(questions, input, moderateCount);
                     
                     break;
                 }
                 else
                 {
-                   j= 1;
+                  r++;
                   
                 }
             }
@@ -90,11 +131,21 @@ public class Test {
         int moderateCount = count;
         // create a variable for storing userAnswer
         String userAnswer;
+        
+        for (int i = 1; i < 2; i++) {
+        //dont forget to change the value of r as no of question to be answered
          if(r==3)
         {
         return moderateCount;
         }
-        for (int i = 1; i < 2; i++) {
+        if(m=0)
+        {
+        j=0;
+        }
+        else
+        {
+        j=j+m;
+        }
             for (int j = 0; j < questions[i].length; j++) {
                 System.out.println(questions[i][j].question); // to print the question in the console
                 userAnswer = input.next(); // to store the input from the user in a variable userAnswer
@@ -105,12 +156,15 @@ public class Test {
                     moderateCount++;  // increment the moderateCount if the answer is correct
                     // on answering we make the user to attend complex question , so takeComplex() method is assigned to moderateCount
                     r++;
+                    m=m+1;
+                    marks = marks + 4;
                     moderateCount = takeComplex(questions, input, moderateCount);
                    
                     break;
                 } else {
                     // on not answering, we make the user to attend simple question , so takeSimple() method is assigned to moderateCount
                     r++;
+                    m=m+1
                     moderateCount = takeSimple(questions, input, moderateCount);
                     break;
                 }
@@ -127,12 +181,22 @@ public class Test {
         int complexCount = count;
         // create a variable for storing userAnswer
         String userAnswer;
-          if(r==3)
+         
+        
+        for (int i = 2; i < 3; i++) {
+        //dont forget to change the value of r as no of question to be answered
+         if(r==3)
         {
         return complexCount;
         }
-        
-        for (int i = 2; i < 3; i++) {
+        if(c=0)
+        {
+        j=0;
+        }
+        else
+        {
+        j=j+c;
+        }
             for (int j = 0; j < questions[i].length; j++) {
                 System.out.println(questions[i][j].question); // to print the question in the console
                 userAnswer = input.next(); // to store the input from the user in a variable userAnswer
@@ -140,8 +204,11 @@ public class Test {
                 if (questions[i][j].answer.equalsIgnoreCase(userAnswer)) {
                 // on answering we make the user to attend complex question again
                     complexCount++; // so complex count is incremented
+                    marks=marks+6;
                     r++;
                 } else {
+                c=c+1;
+                complexCount = takeModerate(questions, input, moderateCount);
                     break;
                 }
             }
