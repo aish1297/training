@@ -8,6 +8,9 @@ public class Test {
 
         // initialized totalCount to be zero
         int totalCount = 0;
+        // r is for the worst case , like when we call for  twice the simple or twice the complex
+        int r = 0;
+        
 
         // collected all questions from the Question Interface created
         String simpleQuestion1 = Question.simple1;
@@ -52,6 +55,10 @@ public class Test {
         int simpleCount = count;
         // create a variable for storing userAnswer
         String userAnswer;
+        if(r==3)
+        {
+        return simpleCount;
+        }
         for (int i = 0; i < 1; i++) {
             for (int j = 0; j < questions[i].length; j++) {
                 System.out.println(questions[i][j].question); // to print the question in the console
@@ -61,7 +68,15 @@ public class Test {
 //                the option in capital letters the answer gets compared with the userAnswer)
                 if (questions[i][j].answer.equalsIgnoreCase(userAnswer)) {
                     simpleCount++; // increment the simpleCount if the answer is correct
+                    r++;
+                     moderateCount = takeModerate(questions, input, moderateCount);
+                    
                     break;
+                }
+                else
+                {
+                   j= 1;
+                  
                 }
             }
         }
@@ -75,6 +90,10 @@ public class Test {
         int moderateCount = count;
         // create a variable for storing userAnswer
         String userAnswer;
+         if(r==3)
+        {
+        return moderateCount;
+        }
         for (int i = 1; i < 2; i++) {
             for (int j = 0; j < questions[i].length; j++) {
                 System.out.println(questions[i][j].question); // to print the question in the console
@@ -85,10 +104,13 @@ public class Test {
                 if (questions[i][j].answer.equalsIgnoreCase(userAnswer)) {
                     moderateCount++;  // increment the moderateCount if the answer is correct
                     // on answering we make the user to attend complex question , so takeComplex() method is assigned to moderateCount
+                    r++;
                     moderateCount = takeComplex(questions, input, moderateCount);
+                   
                     break;
                 } else {
                     // on not answering, we make the user to attend simple question , so takeSimple() method is assigned to moderateCount
+                    r++;
                     moderateCount = takeSimple(questions, input, moderateCount);
                     break;
                 }
@@ -105,6 +127,11 @@ public class Test {
         int complexCount = count;
         // create a variable for storing userAnswer
         String userAnswer;
+          if(r==3)
+        {
+        return complexCount;
+        }
+        
         for (int i = 2; i < 3; i++) {
             for (int j = 0; j < questions[i].length; j++) {
                 System.out.println(questions[i][j].question); // to print the question in the console
@@ -113,6 +140,7 @@ public class Test {
                 if (questions[i][j].answer.equalsIgnoreCase(userAnswer)) {
                 // on answering we make the user to attend complex question again
                     complexCount++; // so complex count is incremented
+                    r++;
                 } else {
                     break;
                 }
