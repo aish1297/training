@@ -1,0 +1,16 @@
+package com.objectfrontier.training.mcq;
+
+public class QuestionCreator {
+
+// create a variable for question and answer
+    String question;
+    String answer;
+
+// A constructor is created to create the Questions
+    public QuestionCreator(String ques, String answer) {
+
+// assigning arguments to the current class variables
+        this.question = ques;
+        this.answer = answer;
+    }
+}

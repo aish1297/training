@@ -1,0 +1,46 @@
+package com.objectfrontier.training.mcq;
+
+// created an interface for the questions that is used in the test
+// we go for an interface to define the questions as constants and to make it easily manageable if we want to change the questions in future
+public interface Question {
+
+// created two questions under simple level
+// StringBuilder is used to avoid memory wastage which is efficient than String
+
+// 1. Concat is used to add a String at the end of another String. Append adds a String or character sequence to StringBuilder. 
+// 2. Concat creates a new String object, whereas StringBuider append doesn't. 
+// 3. Append is more efficient than concat.
+
+    String simple1 = new StringBuilder("what is the color of apple\n")
+            .append("(a)red\n")
+            .append("(b)green\n")
+            .append("(c)yellow").toString(); // toString is used to convert a StringBuilder to String
+
+    String simple2 = new StringBuilder("what is the color of plum\n")
+            .append("(a)red\n")
+            .append("(b)green\n")
+            .append("(c)yellow").toString(); // toString is used to convert a StringBuilder to String
+
+// created two questions under moderate level
+    String moderate1 = new StringBuilder("what is the age of saravana\n")
+            .append("(a)12\n")
+            .append("(b)11\n")
+            .append("(c)13").toString(); // toString is used to convert a StringBuilder to String
+
+    String moderate2 = new StringBuilder("what is (1+2)\n")
+            .append("(a)3\n")
+            .append("(b)3\n")
+            .append("(c)2").toString(); // toString is used to convert a StringBuilder to String
+
+// created two questions under complex level
+    String complex1 = new StringBuilder("what is the age of karthick\n")
+            .append("(a)12\n")
+            .append("(b)11\n")
+            .append("(c)13").toString(); // toString is used to convert a StringBuilder to String
+
+    String complex2 = new StringBuilder("what is (3+5)\n")
+            .append("(a)3\n")
+            .append("(b)3\n")
+            .append("(c)2").toString(); // toString is used to convert a StringBuilder to String
+
+}
