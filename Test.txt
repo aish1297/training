@@ -1,0 +1,123 @@
+package com.objectfrontier.training.mcq;
+
+import java.util.Scanner;
+
+public class Test {
+
+    public static void main(String[] args) {
+
+        // initialized totalCount to be zero
+        int totalCount = 0;
+
+        // collected all questions from the Question Interface created
+        String simpleQuestion1 = Question.simple1;
+        String simpleQuestion2 = Question.simple2;
+        String moderateQuestion1 = Question.moderate1;
+        String moderateQuestion2 = Question.moderate2;
+        String complexQuestion1 = Question.complex1;
+        String complexQuestion2 = Question.complex2;
+
+        // used Scanner class to get input from the user
+        Scanner input = new Scanner(System.in);
+
+        //created array of simple,moderate and complex to create questions along with the correct answers
+        QuestionCreator[] simpleQuestions   = { new QuestionCreator(simpleQuestion1, "a"),
+                                                new QuestionCreator(simpleQuestion2, "a") };
+        QuestionCreator[] moderateQuestions = { new QuestionCreator(moderateQuestion1, "b"),
+                                                new QuestionCreator(moderateQuestion2, "b") };
+        QuestionCreator[] complexQuestions  = { new QuestionCreator(complexQuestion1, "c"),
+                                                new QuestionCreator(complexQuestion2, "c") };
+
+        //2d array to give user all type of questions
+        QuestionCreator[][] q1 = { simpleQuestions, moderateQuestions, complexQuestions };
+
+
+        // We have called the moderate method here as the user starts with the moderate question
+        // the final result of the takeModerate method is assigned to totalCount
+        totalCount = takeModerate(q1, input, totalCount);
+
+        // depending on the total count the grade is displayed,so a else if block is added
+        if (totalCount == 3) {
+            System.out.println("Your grade is HD");
+        } else if (totalCount == 2 || totalCount == 1) {
+            System.out.println("Your grade is D");
+        } else
+            System.out.println("Your grade is C");
+    }
+
+    // takeSimple method is defined with questions , input and the count as parameters
+    public static int takeSimple(QuestionCreator[][] questions, Scanner input, int count) {
+
+        // we declare simpleCount to be the count
+        int simpleCount = count;
+        // create a variable for storing userAnswer
+        String userAnswer;
+        for (int i = 0; i < 1; i++) {
+            for (int j = 0; j < questions[i].length; j++) {
+                System.out.println(questions[i][j].question); // to print the question in the console
+                userAnswer = input.next(); // to store the input from the user in a variable userAnswer
+
+//                to compare the userAnswer and the correct answer of the question .equalsIgnoreCase is used(as even if the user enters
+//                the option in capital letters the answer gets compared with the userAnswer)
+                if (questions[i][j].answer.equalsIgnoreCase(userAnswer)) {
+                    simpleCount++; // increment the simpleCount if the answer is correct
+                    break;
+                }
+            }
+        }
+        return simpleCount; // returns the simpleCount to the method
+    }
+
+    // takeModerate method is defined with questions , input and the count as parameters
+    public static int takeModerate(QuestionCreator[][] questions, Scanner input, int count) {
+
+        // we declare moderateCount to be the count
+        int moderateCount = count;
+        // create a variable for storing userAnswer
+        String userAnswer;
+        for (int i = 1; i < 2; i++) {
+            for (int j = 0; j < questions[i].length; j++) {
+                System.out.println(questions[i][j].question); // to print the question in the console
+                userAnswer = input.next(); // to store the input from the user in a variable userAnswer
+
+//              to compare the userAnswer and the correct answer of the question .equalsIgnoreCase is used(as even if the user enters
+//              the option in capital letters the answer gets compared with the userAnswer)
+                if (questions[i][j].answer.equalsIgnoreCase(userAnswer)) {
+                    moderateCount++;  // increment the moderateCount if the answer is correct
+                    // on answering we make the user to attend complex question , so takeComplex() method is assigned to moderateCount
+                    moderateCount = takeComplex(questions, input, moderateCount);
+                    break;
+                } else {
+                    // on not answering, we make the user to attend simple question , so takeSimple() method is assigned to moderateCount
+                    moderateCount = takeSimple(questions, input, moderateCount);
+                    break;
+                }
+            }
+        }
+        return moderateCount; // returns the moderateCount to the method
+    }
+
+
+    // takeComplex method is defined with questions , input and the count as parameters
+    private static int takeComplex(QuestionCreator[][] questions, Scanner input, int count) {
+
+        // we declare complexCount to be the count
+        int complexCount = count;
+        // create a variable for storing userAnswer
+        String userAnswer;
+        for (int i = 2; i < 3; i++) {
+            for (int j = 0; j < questions[i].length; j++) {
+                System.out.println(questions[i][j].question); // to print the question in the console
+                userAnswer = input.next(); // to store the input from the user in a variable userAnswer
+
+                if (questions[i][j].answer.equalsIgnoreCase(userAnswer)) {
+                // on answering we make the user to attend complex question again
+                    complexCount++; // so complex count is incremented
+                } else {
+                    break;
+                }
+            }
+        }
+        return complexCount; // returns the complexCount to the method
+    }
+}
