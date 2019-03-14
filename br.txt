@@ -1,0 +1,378 @@
+home.html
+
+<header>
+  <mat-toolbar color="primary">
+    <span>Baskin Robbins</span>
+  </mat-toolbar>
+</header>
+<div>
+<!-- <mat-tab-group mat-align-tabs="center">
+  <mat-tab label="Icecreams">
+    <ng-template matTabContent> Icecreams</ng-template>
+  </mat-tab>
+  <mat-tab label="Icecream Cakes">
+    <ng-template matTabContent> Icecream Cakes</ng-template>
+  </mat-tab>
+  <mat-tab label="Signature Cones">
+    <ng-template matTabContent> Signature Cones</ng-template>
+  </mat-tab>
+</mat-tab-group> -->
+
+<nav mat-tab-nav-bar >
+  <a mat-tab-link
+     *ngFor="let routeLink of routeLinks; let i = index;"
+     [routerLink]="routeLink.link"
+     routerLinkActive="mat-tab-link-active"
+     #rla="routerLinkActive"
+     (click)="activeLinkIndex = i"
+     [routerLinkActiveOptions]="{exact: true}"
+  >
+      {{routeLink.label}}
+  </a>
+</nav>
+<router-outlet></router-outlet>
+
+</div>
+
+.ts
+
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss']
+})
+export class HomeComponent implements OnInit {
+
+  routeLinks: any[];
+  activeLinkIndex = -1;
+  constructor(private router: Router) {
+    this.routeLinks = [
+      {
+          label: 'Icecreams',
+          link: './icecreams',
+          index: 0
+      }, {
+          label: 'Icecreams Cakes',
+          link: './icecreamcakes',
+          index: 1
+      }, {
+        label: 'Signature Cones',
+        link: './signaturecones',
+        index: 2
+    }
+  ];
+  }
+
+  ngOnInit() {
+    this.router.events.subscribe((res) => {
+      this.activeLinkIndex = this.routeLinks.indexOf(this.routeLinks.find(tab => tab.link === '.' + this.router.url));
+  });
+  }
+}
+
+
+
+icecreams
+.html
+
+<div>
+    <!-- <mat-icon>add_circle</mat-icon> -->
+</div>
+
+<!-- <div class="search-div">
+  <button mat-raised-button>
+    <mat-icon>add</mat-icon>Create
+  </button>
+  <mat-form-field class="search-form-field" floatLabel="never">
+    <input matInput [(ngModel)]="searchKey" placeholder="Search" autocomplete="off" (keyup)="applyFilter()">
+    <button mat-button matSuffix mat-icon-button aria-label="Clear"*ngIf="searchKey"  (click)="onSearchClear()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+</div>
+<div class="mat-elevation-z8">
+    <mat-table [dataSource]="listData"  matSort>
+        <ng-container matColumnDef="fullName">
+          <mat-header-cell *matHeaderCellDef  mat-sort-header>Full Name</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.fullName}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="email">
+          <mat-header-cell *matHeaderCellDef  mat-sort-header>Email</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.email}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="mobile">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Mobile</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.mobile}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="city">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>City</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.city}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="departmentName">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Department</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.departmentName}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <button mat-icon-button><mat-icon>launch</mat-icon></button>
+            <button mat-icon-button color="warn"><mat-icon>delete_outline</mat-icon></button>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="loading">
+          <mat-footer-cell *matFooterCellDef colspan="6">
+            Loading data...
+          </mat-footer-cell>
+        </ng-container>
+        <ng-container matColumnDef="noData">
+          <mat-footer-cell *matFooterCellDef colspan="6">
+            No data.
+          </mat-footer-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide':listData!=null}"></mat-footer-row>
+        <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide':!(listData!=null && listData.data.length==0)}"></mat-footer-row>
+      </mat-table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5" showFirstLastButtons></mat-paginator>
+    </div> -->
+
+import { Component, OnInit, ViewChild } from '@angular/core';
+// import { MatTableDataSource } from '@angular/material';
+// import { EmployeeService } from '../shared/employee.service';
+
+@Component({
+  selector: 'app-icecreams',
+  templateUrl: './icecreams.component.html',
+  styleUrls: ['./icecreams.component.scss']
+})
+export class IcecreamsComponent implements OnInit {
+
+//   constructor() { }
+
+  ngOnInit() {
+  }
+
+// }
+// constructor(private service: EmployeeService) { }
+
+// listData: MatTableDataSource<any>;
+// displayedColumns: string[] = ['fullName', 'email', 'mobile', 'city', 'departmentName','actions'];
+// @ViewChild(MatSort) sort: MatSort;
+// @ViewChild(MatPaginator) paginator: MatPaginator;
+// searchKey: string;
+
+// ngOnInit() {
+//   this.service.getEmployees().subscribe(
+//     list => {
+//       let array = list.map(item => {
+//         let departmentName = this.departmentService.getDepartmentName(item.payload.val()['department']);
+//         return {
+//           $key: item.key,
+//           departmentName,
+//           ...item.payload.val()
+//         };
+//       });
+//       this.listData = new MatTableDataSource(array);
+//       this.listData.sort = this.sort;
+//       this.listData.paginator = this.paginator;
+//       this.listData.filterPredicate = (data, filter) => {
+//         return this.displayedColumns.some(ele => {
+//           return ele != 'actions' && data[ele].toLowerCase().indexOf(filter) != -1;
+//         });
+//       };
+//     });
+// }
+
+// onSearchClear() {
+//   this.searchKey = "";
+//   this.applyFilter();
+// }
+
+// applyFilter() {
+//   this.listData.filter = this.searchKey.trim().toLowerCase();
+// }
+}
+
+
+.login html
+<mat-toolbar color="primary">
+    <span>Baskin Robbins</span>
+</mat-toolbar>
+
+<mat-card class="example-card">
+  <mat-card-header>
+    <mat-card-title>Login</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form class="example-form">
+      <table class="example-full-width" cellspacing="0">
+        <tr>
+          <td>
+            <mat-form-field class="example-full-width">
+              <input matInput placeholder="Username"
+                     [(ngModel)]="username"
+                     name="username"
+                     required>
+            </mat-form-field>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <mat-form-field class="example-full-width">
+              <input matInput placeholder="Password"
+                    [(ngModel)]="password"
+                    type="password"
+                    name="password"
+                    required>
+            </mat-form-field>
+          </td>
+      </tr></table>
+    </form>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-button
+            (click)="login()">Login</button>
+  </mat-card-actions>
+</mat-card>
+
+<router-outlet></router-outlet>
+
+
+
+.ts
+
+import { Component, OnInit } from '@angular/core';
+import {Router} from '@angular/router';
+
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
+})
+
+export class LoginComponent implements OnInit {
+
+  constructor(private router: Router) { }
+
+  username: string;
+  password: string;
+
+  ngOnInit() {
+  }
+
+  login() : void {
+    if(this.username == 'admin' && this.password == 'admin'){
+     this.router.navigate(["home"]);
+    }else {
+      alert("Invalid credentials");
+    }
+  }
+}
+
+
+
+.routing module 
+
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import { HomeComponent } from './home/home.component';
+import { IcecreamsComponent } from './icecreams/icecreams.component';
+import { IcecreamCakesComponent } from './icecream-cakes/icecream-cakes.component';
+import { SignatureConesComponent } from './signature-cones/signature-cones.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { LoginComponent } from './login/login.component';
+
+const routes: Routes = [
+  { path: 'login', component: LoginComponent},
+  { path: '', redirectTo : '/login', pathMatch: 'full' },
+    { path: 'home', component: HomeComponent, children: [
+      { path: 'icecreams', component: IcecreamsComponent},
+      { path: 'icecreamcakes', component: IcecreamCakesComponent},
+      { path: 'signaturecones', component: SignatureConesComponent}
+  ]},
+  { path: '**', component: PageNotFoundComponent }
+];
+
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+
+
+
+app.comp.html
+
+<router-outlet></router-outlet>
+
+
+app.mod.ts
+
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule,
+         FormsModule} from '@angular/forms';
+import { MatFormFieldModule,
+         MatCardModule,
+         MatTable,
+         MatPaginatorModule,
+         MatSortModule,
+         MatTableDataSource,
+         MatPaginator} from '@angular/material';
+import { MatInputModule } from '@angular/material';
+import { MatIconModule } from '@angular/material/icon';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
+
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { LoginComponent } from './login/login.component';
+import { HomeComponent } from './home/home.component';
+import { IcecreamsComponent } from './icecreams/icecreams.component';
+import { IcecreamCakesComponent } from './icecream-cakes/icecream-cakes.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { SignatureConesComponent } from './signature-cones/signature-cones.component';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    HomeComponent,
+    IcecreamsComponent,
+    IcecreamCakesComponent,
+    PageNotFoundComponent,
+    SignatureConesComponent
+
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    MatTabsModule,
+    MatToolbarModule,
+    MatCardModule,
+    MatProgressSpinnerModule,
+    MatTable,
+    MatPaginatorModule,
+    MatSortModule,
+    MatTableDataSource,
+    MatPaginator,
+    MatTableDataSource
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
