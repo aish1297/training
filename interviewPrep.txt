@@ -1,0 +1,520 @@
+Angular
+
+1. Life Cycles of Angular?
+2. About native angular Directives?
+3. How can you identify custom directive which can be a tag or comment or class or attribute?
+4. How to communicate from one controller to the other ?
+5. What is lazy Loading?
+
+Level 1: Usual HR discussion, Introduce yourself
+
+          Level 2 : Introduce Yourself. 
+
+                       How long you are working in angular 4
+                       How you are handling the responsiveness
+                       Explain about Build Process
+                       Explain Spring modules
+                       HQL
+                       Typescript vs Javascript
+                       Jenkins
+                       Bamboo & Build Scripts
+                       Design Patterns
+                       Rest APIs
+                       Automation Testing
+                       Jmeter
+
+          Level 3: Introduce Yourself
+
+                       Short Term Goal
+                       Explain about your existing Project Module wise
+                       Java Vs Javascript
+                       Solving Protractor unit test case program
+                       Based on Agile [backlog refinement, grooming session and sprint planning ]
+                       Project Delivery based question
+
+HTML - How do you create new tags .
+JavaScript - What is input tag.
+Angular - Features of Angular.
+What is Angular
+Working experience in Angular
+Controller 
+
+HTML - What is Mat tab , How do you use response framework , What is attributes , difference between JavaScript and jQuery , Basics in angular , What is Angular, How do you differentiate Angular1 and 2 , Understanding about the banking process, Project experience
+
+Self Intro , Experience in Mobile Application, What are the difference between UI and UX, application working experience , Android slides , How  many images you give to developers for screen UI , how you position icons, how many icons required for Single Window , Difference between Android and IOS how do you decide screen size, domain experience.what is the size of display for different systems, how much pixels, draw wireframe tool , draw baking app, 
+
+What is Spring , spring - modules , dependence injection, how far able to connect spring with hibernate , What is Hibernate , What are the sessions in Hibernate, Project roles and responsibilities.Explain about Concurrent actioner , How asp internally work as a servlet , Explain about spring IOC, Struts flow actions, servlets ,Hibernate - one to many relations, spring dependency injection , single term objects in spring  jsp array parameters 
+
+What are the Frameworks used in project  , Array - How you spotlight first character of array , How you Sort out Numbers using Array , Page object model, 
+
+Write Script for Hyperlink and button , Functional Integration for Banking App , What is regression Test , Array , Framework , What de bug error , What are the frameworks used in projects
+
+Scenario in Selenium – A webpage given with 3 Advertisements , Write Logic for webpage , What is Test NG framework , Manual Testing , How do you Reversing the text , Identify first largest Number and Second largest Number in the given test, Manual – What is Value Boundary Analysis , Logical in Testing, How do you write test cases in Selenium , What are the frameworks used in projects.
+
+Topics to be covered: (Angular)
+
+1. Passing data between components using Input() and Output() aka Event Emitter. Difference between property, event binding and two way binding.
+
+2. Making Http calls with Angular HTTP client and RxJS Observables.
+
+3. Routing concepts including AuthGuard (canActivate), RouteGaurd (canDeactivate) and Lazy Loading (loadChildren).
+
+4. Forms: Both Template driven and Reactive forms.
+
+5. Change detection Implementation in a component (using OnChange, SimpleChanges).
+
+6. Lifecycle hooks (OnInit, OnDestroy, OnChange, etc.).
+
+7. Pipes (transform()).
+
+8. Directives concepts such as @HostListener(), @HostBinding().
+
+9. RxJS concepts such as Observable, Subject, Subscription, subscribe(), unsubscribe()
+
+Tasks have been given before:
+
+1. HTTP calls (GET and POST) using observables
+
+2. Data binding (using *ngIf and *ngFor)
+
+3. Implementing Routes (including the usage of Route Params)
+
+4. Setting up Angular Project using Yarn as package manager
+
+1.Can you Introduce about yourself?
+
+2.What are the new features in HTML5?
+
+3.What is difference between Local Storage and Session storage?
+
+4.Have you worked with any features based on jQuery?
+
+5.Write the function for autocomplete search(logic part)?
+
+6.Have you worked with PSD to HTML5 convertion?
+
+7.What are the features of angular2 you worked with?
+
+8.And finally, any question for us?
+
+Core Java
+
+-          What is the diff b/n statics and instant variable
+
+-          What is abstract class
+
+-          What is diff b/n abstract class and Enterprise and provide some real time example
+
+-          What is encapsulation, real time example
+
+-          What are the levels of object lock
+
+-          How to avoid deadlock
+
+-          What is the diff b/n list and set
+
+-          What is diff b/n Hash map and Hash table
+
+-          What is diff b/n list and hash map
+
+-          What is diff b/n string buffer and string builder
+
+-          What is string constant pool memory
+
+-          What is the diff b/n pool memory and Heat memory
+
+-          Diff b/n comparator and comparable
+
+-          What is diff b/n throw and throws
+
+-          What is diff b/n equals and Hash code, and purpose of these two things
+
+-          What is Oops and collection
+
+HTML/CSS -
+
+1. Features of HTML5 and CSS3.
+
+2. Display Properties available in CSS
+
+3. Flex-box
+
+ANGULAR 2
+
+1. Decorators in Angular2
+
+2. How to use Event emitters
+
+3. Metadata for ngModule
+
+4. How to pass data from one component to the other.
+
+
+Spring
+
+-          Version in spring
+
+-          What are all the annotations
+
+-          What are the qualifier annotations
+
+-          What is IOC
+
+-          What is auto wiring
+
+Hibernate
+
+-          Version of hibernate
+
+-          What is diff b/n load and get method
+
+-          What is lazy loading
+
+-          What is diff b/n merge and update method
+
+-          What are the relationship in hibernate
+
+UI Technology
+
+-          Javascript and angular js
+
+SQL
+
+-          Display the maximum salary of employee in department wise
+
+-          Write a query to find the Second highest salary
+
+-          What is diff b/n procedure and function
+
+-          Why do need to go for procedure
+
+1    Write & explain a program for palindrome in java?
+
+2    Write a explain program for reverse the string?
+
+3    Write a program for OverLoading & OverRiding for Java?
+
+4    Inheritance details in Java?
+
+5   abstract vs Interface?
+
+6    OOPs concepts in java?
+
+7    String Classes Details in java?
+
+8    Static Key word in java & real time example which you used in your project?
+
+9    What is Final keyword, and uses of final keyword in java?
+
+10    How many locators available in Selenium Webdriver?
+
+11    explain Absolute & Relative Xpaths in Selenium with real time examples?
+
+12    Given a scenario to find xpath for that?
+
+13    Write a Test scenario and cases for following functionality?
+
+ - Business user want to see the transaction using start & end data or merchants list!"
+
+14    How you work under heavy tasks, which need to be completed with in your sprint timing?
+
+15    What are the Testing, that you will do in your project?
+
+16    How will you convert test cases into test scripts in automation?
+
+17    Explain about framework, which you used in your projects?
+
+18    How will you get test data from excel sheet in details ?
+
+19    explain POM framework details?
+
+20    Write a code to access the web page and login with valid credentials in Selenium?
+
+21    How to get automation Test Report in your project?
+
+22    TestNG details ?
+
+23    Drop down & window handling in Selenium?
+
+24    Alerts handling in Selenium?
+
+25    pop ups handling in Selenium?
+
+26    What purpose you ll  go for Automation in you project?
+
+1. In outlook write negative test cases for Saved Drafts folder
+
+2. Given One Scenario How many Test cases you can write by using  testing techniques?
+
+3. severity & Priority with example?
+
+4. how to prepare Test Summary Report?
+
+5. Write a Negative Test Cases for following functionality?
+
+Business user want to see the transaction using start & end data or merchants list!"
+
+6. Write & explain a program for number palindrome in java with logic?
+
+7. Write a program for Over Loading & Overriding in Java and where you have used in your project?
+
+8. All Oops concepts in java? What are oops concepts that you have used in your project?
+
+9. Given one scenario on interface?
+
+10. what is final Keyword & Where we can use it?
+
+11. Static Key word in java & real time example which you used in your project?
+
+12. what is the process that you fallowed for automation
+
+13. How many Locators in selenium?
+
+14. What is absolute & Relative xpath?
+
+15. Given One scenario to write a dynamic relative xpath?
+
+16. Given One web table to get particular text from it?
+
+17. Get the Data from excel?
+
+18. Get the data from data base?
+
+19. Architecture for POM Framework?
+
+20. How you get the reports?
+
+21. Test NG annotations?
+
+22. How you do cross browser testing using Grid?
+
+         23. How you will integrate Jenkins with your scripts?
+
+1.Covariant in java
+
+2.difference between rest and soap.
+
+3.difference between get and load in hibernate.
+
+4.Difference between Webserver and application server?Tomcat is which version either application/web based server ?
+
+5.Lazy loading and how to prevent lazy loading in hibernate
+
+6.Lazy loading and Eager loading in hibernate
+
+7.What is Dialect in hibernate and why it is used?
+
+8.Why hibernate is used rather than JDBC ?
+
+9.Can we extend string Class with other class ?
+
+10.Criteria and restriction in hibernate.
+
+11.Jboss folder structure and which file to be changed for datasource configuration.
+
+12.What is Sprint retrospective meeting ?
+
+13.Previous project workflow.
+
+14.role and Responsibilities.
+
+15.How to use JIRA,how we can change status of user story in jira ?
+
+16.Difference between Application context and Bean factory.
+
+17.Java 1.6 features
+
+18.Previous project functionalities and flow .
+
+Will My SQL support trigger
+
+What is Unit test
+
+What is Pair programming
+
+Difference between Php 4 php 5
+
+How Php and HTML interact
+
+Node js
+
+What is closure.
+
+What is prototype js
+
+Design pattern in mvc
+
+Writing clean code experience.
+
+1) Types of dependency injection (Spring).
+
+2) Collections in java.
+
+3) Difference between ArrayList and vector.
+
+4) About java spring.
+
+5) How many null values are allowed in hashmap .
+
+6) HashMap and HashSet.
+
+why Angular
+
+Service, Pipes
+
+Http Interceptors
+
+Use of express
+
+mysql vs mongodb
+
+how to upload multiple files from angular to node and store in server(whole logic)
+
+npm packages used
+
+how to connect node to mongodb
+
+how to get nearest location using mongodb
+
+how to find person who receive second largest salary
+
+how to get value of field based on className
+
+what is callback hell and how to resolve it
+
+Angular cli
+
+how to resolve SEO issue in Angular
+
+pass data from parent to child compoenent and pass data from child to parent compoenent
+
+authentication mechanism for Angular
+
+how to generate token
+
+observable vs promise
+
+lifecycle hooks in Angular
+
+how app works behind the scene
+
+Core Java
+
+1. Abstract Class
+
+Explanation and In-depth he will ask.
+
+Object Can be Created or not
+
+2. Interface
+
+Explanation and In-depth he will ask.
+
+3. HashMap and Hashtable
+
+Explanation with diagram
+
+4. JSP Object
+
+5. Servlet Context and Servlet Config
+
+6. Spring Core
+
+7. IOC Container
+
+8. Difference Between Bean factory and Application Context
+
+2nd Round
+
+He will ask us to write the Java Code of your choice.
+
+He will test weather we have worked on these frameworks or not
+
+3rd Round -- Manager Round
+
+Java:
+
+Key Responsibilities:
+
+§  Groom functional stories with product owner
+
+§  Prepare implementation plan with team
+
+§  Prepare WBS
+
+§  Implement use cases and rectify issues
+
+§  Perform code analysis, clean up, code migration and UI refactoring
+
+§  Perform unit testing and issue fixing
+
+§  Ensure the performance & quality of application
+
+§  Involve in technical decision making
+
+Angular
+
+Key Responsibilities:
+
+§  Groom functional stories with product owner
+
+§  Prepare implementation plan with team
+
+§  Prepare WBS
+
+§  Implement use cases and rectify issues
+
+§  Perform code analysis, clean up, code migration and UI refactoring
+
+§  Perform unit testing and issue fixing
+
+§  Develop reusable UI components
+
+§   Integrate web services using JSON
+
+§   Design and develop prototypes
+
+§  Ensure the performance, quality & responsiveness of application
+
+§  Involve in technical decision making
+
+§  Perform client-side validation
+
+Java Skill Stack:
+
+Language : Java, Javascript
+
+Frameworks : Spring Boot, Spring JPA, Hibernate
+
+Database : MySQL
+
+Build tools : Gradle, Maven
+
+Web Technologies : HTML 5, CSS 3
+Unit Testing : TestNG, Junit, Mockito
+
+VCS:GIT
+
+Project Management Tools: Jira, Gitlab, Trello
+
+API Documentation : Swagger
+
+Angular Skill Stack :
+
+Language : Javascript, Typescript, Java
+
+Frameworks : Angular 6
+
+Database : MySQL
+
+Build tools : Webpack, NPM
+
+Web Technologies : HTML 5, CSS 3
+
+Unit Testing : Karma, Jasmine
+
+VCS:GIT
+
+Project Management Tools: Jira, Gitlab, Trello
+
+
