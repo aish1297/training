@@ -1,0 +1,1685 @@
+Results.component.html
+
+
+<div class="section">
+
+    <div class="section-header">
+        <h1 class="mat-h1">{{'RESULTS.TITLE' | translate }} </h1>
+        <div class="mat-body instructions">{{'RESULTS.INFO' | translate }}
+            <button mat-flat-button class="action-button export-all" (click)="onExportAssessment()" [disabled]="selection.selected.length == 0">
+                {{'LABELS.EXPORT_SELECTED' | translate}}
+            </button>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="filters">
+            <div>
+                <h3 class="mat-h3">{{'LABELS.SEARCH' | translate }}</h3>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="spread end" style="margin-top:-30px;">
+                    <hso-chip-select style="width: 50%"    
+                                 [data]="completableSites"
+                                 [label]="'Site Name'"
+                                 [isReseted]="isReseted"
+                                 [diplayField]="'name'"
+                                 (onFilterData)="onFilterSites($event)"
+                                 (onDataChange)="onSitesDataChange($event)">
+                    </hso-chip-select>
+
+                    <hso-chip-select style="margin-left: 1%; width: 50%"    
+                        [data]="completableServices"
+                        [label]="'Service Name '"
+                        [isReseted]="isReseted"
+                        [diplayField]="'name'"
+                        (onFilterData)="onFilterServices($event)"
+                        (onDataChange)="onServicesDataChange($event)">
+                    </hso-chip-select>
+
+            </div>
+
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between">
+            <span class="spacer"></span>
+            <div fxLayout="row">
+                <button mat-flat-button class="action-button reset-button" [disabled]="getResetStatus()" (click)="onResetAssessmentFilter()">{{'LABELS.RESET'
+                    | translate }}</button>
+                <button mat-flat-button class="action-button filter-button" (click)="onApplyAssessmentFilter()">{{'LABELS.APPLY'
+                    | translate }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<mat-table mat-table [dataSource]="data" style="width: 100%;" matSort matSortActive="siteName, startDate, endDate" matSortDisableClear matSortDirection="asc">
+
+    <!-- Checkbox Column -->
+    <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef class="column-width-5">
+            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()">
+            </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row" class="column-width-5 vertical-align-cell">
+            <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+            </mat-checkbox>
+        </td>
+    </ng-container>
+
+    <!-- Site Column -->
+    <ng-container matColumnDef="siteName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'LABELS.SITE' | translate}} </th>
+        <td mat-cell *matCellDef="let assessment"  class="vertical-align-cell"> {{assessment.siteName}} </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="column-width-10"> {{'LABELS.NAME' | translate}} </th>
+        <td mat-cell *matCellDef="let assessment" class="column-width-10 vertical-align-cell"> {{assessment.name ? assessment.name : ('ATTESTATION.DEFAULT_NAME' | translate)}} </td>
+    </ng-container>
+
+    <!-- Zone Column -->
+    <ng-container matColumnDef="zone">
+        <th mat-header-cell *matHeaderCellDef>{{'RESULTS.ASSESSMENT_MANUAL' | translate}} </th>
+        <td mat-cell *matCellDef="let assessment" class="service-list vertical-align-cell">{{assessment.criteriaGroupName}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="startDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="column-width-10">{{'LABELS.START_DATE' | translate}}</th>
+        <td mat-cell *matCellDef="let assessment" class="manual-list column-width-10 vertical-align-cell">
+            <span *ngIf="assessment.startDate">{{assessment.startDate | amUtc | amLocal | amDateFormat:'YYYY-MM-DD HH:mm'}}</span>
+        </td>
+    </ng-container>
+
+    <!-- Date Range Column -->
+    <ng-container matColumnDef="endDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="column-width-10">{{'LABELS.END_DATE' | translate}}</th>
+        <td mat-cell *matCellDef="let assessment" class="manual-list column-width-10 vertical-align-cell">
+            <span *ngIf="assessment.startDate">{{assessment.endDate | amUtc | amLocal | amDateFormat:'YYYY-MM-DD HH:mm'}}</span>
+        </td>
+    </ng-container>
+
+    <!-- Status Column -->
+    <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef class="column-width-10 padding-left-1"> {{'LABELS.STATUS' | translate}} </th>
+
+        <td mat-cell *matCellDef="let assessment" class="column-width-10 vertical-align-cell">
+            <tr>
+                <ngx-charts-bar-horizontal-stacked [view]="view" [scheme]="colorScheme" [results]="assessment.criteriaData" [gradient]="gradient"
+                    [xAxis]="showXAxis" [yAxis]="showYAxis" [legend]="showLegend" [showDataLabel]="showDataLabel" [showXAxisLabel]="showXAxisLabel"
+                    [showYAxisLabel]="showYAxisLabel" [xAxisLabel]="xAxisLabel" [yAxisLabel]="yAxisLabel" (select)="onSelect($event)">
+                    <ng-template #tooltipTemplate let-model="model" class="chart-tooltip">
+                        <h3 class="chart-tool-tip">{{model?.name}}: {{model?.value}}</h3>
+                      </ng-template>
+                </ngx-charts-bar-horizontal-stacked>
+            </tr>
+            <tr>
+                <td class="status-indicator">
+                    <div>
+                        {{'LABELS.COMPLETION' | translate}} : {{assessment?.totalMetCount + assessment?.totalUnmetCount + assessment?.totalNotApplicableCount}}/{{assessment?.totalCriteriaCount}}
+                    </div>
+                    <div>
+                        {{'LABELS.MET' | translate}} : {{assessment?.totalMetCount}}/{{assessment?.totalCriteriaCount}}
+                    </div>
+                    <div>
+                        {{'LABELS.UNMET' | translate}} : {{assessment?.totalUnmetCount}}/{{assessment?.totalCriteriaCount}}
+                    </div>
+                    <div>
+                        {{'LABELS.NA' | translate}} : {{assessment?.totalNotApplicableCount}}/{{assessment?.totalCriteriaCount}}
+                    </div>
+                </td>
+            </tr>
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="export">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let assessment">
+            <button mat-icon-button (click)="onExportAssessment(assessment)" class="center-align-contents">
+                <mat-icon>save_alt</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns" class="header-margin-10"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
+</mat-table>
+
+<mat-paginator #paginator [length]="resultsLength" [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+
+
+
+results.component.ts
+
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator, MatSort, MatDialog, MatTableDataSource} from '@angular/material';
+import { AssessmentService } from 'app/services/assessment.service';
+import { AccountService } from 'app/core';
+import 'core-js';
+import { IClinicalService } from 'app/shared/model/clinical-service.model';
+import { ExcelImportService } from 'app/services/excel-import.service';
+import { ClinicalServiceService } from 'app/services/clinical-service.service';
+import { ISite } from 'app/shared/model/site.model';
+import { BehaviorSubject } from 'rxjs';
+import { SiteService } from 'app/services/site.service';
+import { SelectionModel } from '@angular/cdk/collections';
+import { ToastrService } from 'ngx-toastr';
+import { Utils } from 'app/common/utils';
+
+export class ResultsFilters {
+    public siteName?: string;
+    public organizationCode?: string;
+    public clinicalServiceId = 0;
+    public zone = 0;
+    public sector = 0;
+}
+
+@Component({
+    selector: 'hso-results',
+    templateUrl: './results.component.html',
+    styleUrls: ['results.scss']
+})
+export class ResultsComponent implements OnInit {
+
+    displayedColumns: string[] = ['select', 'siteName', 'name', 'zone', 'startDate', 'endDate', 'status', 'export'];
+    data: MatTableDataSource<any>;
+    selection = new SelectionModel<any>(true, []);
+    isLoadingResults = false;
+    resultsLength = 0;
+    isReseted = false;
+    loggedUserId: number;
+    clinicalServices: IClinicalService[] = [];
+    filterData: ResultsFilters = new ResultsFilters();
+    selectedSites = [] as ISite[];
+    selectedServices = [] as IClinicalService[];
+    completableServices = new BehaviorSubject<IClinicalService[]>([]);
+    completableSites = new BehaviorSubject<ISite[]>([]);
+
+    view: any[] = [250, 50];
+    // options
+
+    zones = [];
+    sectors = [];
+
+    showXAxis = false;
+    showYAxis = false;
+    gradient = false;
+    showLegend = false;
+    showXAxisLabel = false;
+    showDataLabel = true;
+    xAxisLabel = '';
+    showYAxisLabel = false;
+    yAxisLabel = '';
+
+    colorScheme = {
+        domain: ['#5AA454', '#A10A28', '#C7B42C', '#888888']
+    };
+
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+
+    constructor(private assementService: AssessmentService,
+        public accountService: AccountService,
+        public excelImportService: ExcelImportService,
+        private clinicalServiceService: ClinicalServiceService,
+        private siteService: SiteService,
+        private dialog: MatDialog,
+        private utils: Utils,
+        private toastr: ToastrService) { }
+
+    ngOnInit() {
+        this.getAllClinicalServices();
+        this.getAllAttestationForUser(); // todo:need to find a alternate way to get the account details
+    }
+
+    isAllSelected() {
+        const numSelected = this.selection.selected.length;
+        const numRows = this.data.data.length;
+        return numSelected === numRows;
+    }
+
+    masterToggle() {
+        this.isAllSelected() ?
+            this.selection.clear() :
+            this.data.data.forEach(row => this.selection.select(row));
+      }
+
+    displaySite(site?: ISite): string {
+        return site ? site.name : '';
+    }
+
+    updateCompletableSites(prefix: string): void {
+        if (prefix.length < 3) {
+            this.completableSites.next([]);
+        } else {
+            this.siteService.findByNameIgnoreCaseContaining(prefix)
+                .subscribe(response => {
+                    this.completableSites.next(response.body._embedded.sites);
+                });
+        }
+    }
+
+    getAllClinicalServices() {
+        this.clinicalServiceService.query({
+            size: 5000, // temporarily to get data, need to expose an api to fetch all
+            sort: 'name,asc'
+        }).subscribe(data => {
+            this.clinicalServices = data.body['content'];
+        });
+    }
+
+    onExportAssessment(assessment?) {
+
+        if (!assessment && this.selection.selected.length === 0) {
+            this.toastr.error('', 'Please select atleast one attestation to export!');
+            return;
+        }
+        let assessmentIds = [];
+        let siteIds = [];
+        if (this.selection.selected.length !== 0) {
+            this.selection.selected.forEach(assmt => assessmentIds.push(assmt.assessmentId));
+            this.selection.selected.forEach(assmt => siteIds.push(assmt.siteId));
+        } else if (assessment && assessment.assessmentId) {
+            assessmentIds.push(assessment.assessmentId);
+            siteIds.push(assessment.siteId);
+        } else {
+            assessmentIds = null;
+        }
+
+        this.assementService.getAssessmentsToExport({assessmentId: assessmentIds, siteId: siteIds}).subscribe(
+            (res: any) => {
+                this.selection.clear();
+                this.excelImportService.exportAsExcelFile(res.body, 'Attestation results');
+            }
+        );
+    }
+
+
+
+    updateCompletableServices(prefix: string): void {
+        if (prefix.length < 3) {
+            this.completableServices.next([]);
+        } else {
+            const filtertedClinicalServices = this.clinicalServices.filter(item => this.utils.containsIgnoreCase(item.name, prefix));
+            this.completableServices.next(filtertedClinicalServices);
+        }
+    }
+    
+    onSitesDataChange(prefix) {
+        this.updateCompletableSites(prefix);
+    }
+
+    
+    onServicesDataChange(prefix) {
+        this.updateCompletableServices(prefix);
+    }
+
+    onFilterSites(selectedSites) {
+        // this.isReseted = false;
+        this.selectedSites = selectedSites;
+        if (this.isReseted && this.selectedServices.length === 0) {
+            this.cbsOnResetAssessmentFilter();
+        }
+    }
+    
+    onFilterServices(selectedServices) {
+        this.selectedServices = selectedServices;
+        if (this.isReseted && this.selectedSites.length === 0) {
+            this.cbsOnResetAssessmentFilter();
+        }
+    }
+
+    onApplyAssessmentFilter() {
+        this.paginator.pageIndex = 0;
+        this.getAllAttestationForUser();
+    }
+
+    onResetAssessmentFilter() {
+        this.isReseted = true;
+        // Call back event will be triggered from chip select component, once all the chip select component has been reseted.
+    }
+
+    cbsOnResetAssessmentFilter() {
+        this.isReseted = false;
+        this.paginator.pageIndex = 0;
+        this.filterData = new ResultsFilters();
+        this.selectedSites = [];
+        this.selectedServices = [];
+        this.getAllAttestationForUser();
+    }
+
+    getResetStatus() {
+        if (this.selectedSites.length === 0 &&  this.selectedServices.length === 0 && JSON.stringify(this.filterData) === JSON.stringify(new ResultsFilters())) {
+            return true;
+        }
+        return false;
+    }
+    getAllAttestationForUser() {
+
+        this.assementService.getAllUserAttestation(
+            {
+                siteName: this.selectedSites.length > 0 ? this.selectedSites[0].name : '',
+                servicesId: this.selectedServices.length > 0 ? this.selectedServices[0].id : '',
+                page: this.paginator.pageIndex,
+                size: this.paginator.pageSize,
+                // sort: 'siteName,asc',
+            }
+        ).subscribe(data => {
+            this.resultsLength = data.body.totalElements;
+            const response: any = data.body.content;
+            response.forEach(e => {
+                e.criteriaData = [];
+                e.criteriaData.push(
+                    {
+                        'name': 'Status',
+                        'series': [
+                            { 'name': 'Met', 'value': e.totalMetCount },
+                            { 'name': 'Unmet', 'value': e.totalUnmetCount },
+                            { 'name': 'Not Applicable', 'value': e.totalNotApplicableCount },
+                            // { 'name': 'Not Rated', 'value': e.totalNotRatedCount },
+                            { 'name': 'Remaining Criteria', 'value': e.totalCriteriaCount - (e.totalMetCount + e.totalUnmetCount + e.totalNotApplicableCount) }
+                        ]
+                    }
+                );
+            });
+            this.data = new MatTableDataSource(response);
+            this.data.sort = this.sort;
+            this.data.paginator = this.paginator;
+            this.data.sortingDataAccessor = (dataset, header) => dataset[header];
+        });
+    }
+
+    onSelect(event) {
+    }
+}
+
+
+module.ts
+
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+import { StructureSharedModule } from 'app/shared';
+import { ExcelImportService } from 'app/services/excel-import.service';
+import { RESULTS_ROUTE, ResultsComponent } from './';
+import { ChipSelectModule } from 'app/common/chip-select/chip-select.moudle';
+
+@NgModule({
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        StructureSharedModule,
+        ChipSelectModule,
+        RouterModule.forChild([RESULTS_ROUTE]),
+    ],
+    declarations: [ResultsComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    providers: [ExcelImportService],
+    entryComponents: []
+})
+export class ResultsModule { }
+
+
+
+import { Route } from '@angular/router';
+
+import { UserRouteAccessService } from 'app/core';
+import { ResultsComponent } from 'app/results/results.component';
+
+export const RESULTS_ROUTE: Route = {
+    path: '',
+    component: ResultsComponent,
+    data: {
+        authorities: ['ROLE_USER'],
+        pageTitle: "{{'RESULTS' | translate}}"
+    },
+    canActivate: [UserRouteAccessService]
+};
+
+
+import { Injectable } from '@angular/core';
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
+
+const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+const EXCEL_EXTENSION = '.xlsx';
+
+@Injectable()
+export class ExcelImportService {
+
+     public exportAsExcelFile(json: any[], excelFileName: string): void {
+
+        const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);
+        const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+        const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+        this.saveAsExcelFile(excelBuffer, excelFileName);
+    }
+
+    private saveAsExcelFile(buffer: any, fileName: string): void {
+        const data: Blob = new Blob([buffer], { type: EXCEL_TYPE });
+        FileSaver.saveAs(data, fileName + EXCEL_EXTENSION);
+    }
+
+}
+
+
+<div class="section">
+
+    <div class="section-header">
+        <h1 class="mat-h1">{{'RESULTS.TITLE' | translate }} </h1>
+        <div class="mat-body instructions">{{'RESULTS.INFO' | translate }}
+            <button  *ngIf="isDashBoardVisible === false" mat-flat-button class="action-button export-all" (click)="onExportAssessment()" [disabled]="selection.selected.length == 0">
+                {{'LABELS.EXPORT_SELECTED' | translate}}
+            </button>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="filters">
+            <div>
+                <h3 class="mat-h3">{{'LABELS.SEARCH' | translate }}</h3>
+            </div>
+
+            <div  *ngIf="isDashBoardVisible === true" fxLayout="row" fxLayoutAlign="spread end" style="margin-top:-30px;">
+
+                <!-- <mat-form-field fxFlex="50" fxFlex.xs="100" style="margin-top: -30px !important; margin-bottom: 2px;">
+                    <div style="margin-bottom: 2%" class="mat-body-2 filter-label">Report View</div>
+                    <mat-select [(value)]="selectedReport" style="font-weight: bold">
+                        <mat-option value="Priority Process">Priority Process</mat-option>
+                        <mat-option value="Overall">Overall</mat-option>
+                    </mat-select>
+                </mat-form-field> -->
+                <hso-chip-select style="width: 50%;"
+                            [data]="completableSites"
+                            [label]="'Site Name'"
+                            [isReseted]="isReseted"
+                            [diplayField]="'name'"
+                            (onFilterData)="onFilterSites($event)"
+                            (onDataChange)="onSitesDataChange($event)">
+                </hso-chip-select>
+
+                <div class="mat-body between-filters"><b></b></div>
+
+                <div fxFlex="50" fxFlex.xs="100" style="margin-top: -30px !important; margin-bottom: 1%; padding-left: 3% ">
+                    <div style="margin-bottom: 4%" class="mat-body-2 filter-label">Report View</div>
+                    <mat-radio-group [(ngModel)]="selectedReport" style="margin-bottom: 5%; color: #178b98;">
+                        <mat-radio-button value="Priority Process" color="primary">Priority Process</mat-radio-button>
+                        <mat-radio-button value="Overall" color="primary" style="padding-left: 2%;">Overall</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+
+            </div>
+
+            <div *ngIf="isDashBoardVisible === false" fxLayout="row" fxLayoutAlign="spread end" style="margin-top:-30px;">
+                <hso-chip-select style="width: 50%"
+                            [data]="completableSites"
+                            [label]="'Site Name'"
+                            [isReseted]="isReseted"
+                            [diplayField]="'name'"
+                            (onFilterData)="onFilterSites($event)"
+                            (onDataChange)="onSitesDataChange($event)">
+                </hso-chip-select>
+
+                <hso-chip-select
+                    style="margin-left: 1%; width: 50%"
+                    [data]="completableServices"
+                    [label]="'Service Name'"
+                    [isReseted]="isReseted"
+                    [diplayField]="'name'"
+                    (onFilterData)="onFilterServices($event)"
+                    (onDataChange)="onServicesDataChange($event)">
+                </hso-chip-select>
+
+            </div>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between" style="margin-top: 1%">
+            <span class="spacer"></span>
+            <div fxLayout="row">
+                <button mat-flat-button class="action-button back-button"  *ngIf="isDashBoardVisible === true" (click)="onBackAssessmentPage()">{{ 'LABELS.BACK' | translate}}</button>
+                <button mat-flat-button class="action-button reset-button" [disabled]="getResetStatus()" (click)="onResetAssessmentFilter()">{{'LABELS.RESET'
+                    | translate }}</button>
+                <button mat-flat-button class="action-button filter-button" (click)="onApplyAssessmentFilter()">{{'LABELS.APPLY'
+                    | translate }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-container *ngIf="isDashBoardVisible === false; else dashBoard">
+    <mat-table mat-table [dataSource]="data" style="width: 100%;" matSort matSortActive="siteName, startDate, endDate" matSortDisableClear matSortDirection="asc">
+
+        <!-- Checkbox Column -->
+        <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef class="column-width-5">
+                <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()">
+                </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row" class="column-width-5 vertical-align-cell">
+                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+                </mat-checkbox>
+            </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="column-width-10"> {{'LABELS.NAME' | translate}} </th>
+            <td mat-cell *matCellDef="let assessment" class="column-width-10 vertical-align-cell assessment-name-cell" (click)="siteDetails(assessment.assessmentId, assessment)">
+               {{assessment.name ? assessment.name : ('ATTESTATION.DEFAULT_NAME' | translate)}}
+            </td>
+        </ng-container>
+
+        <!-- Site Column -->
+        <ng-container matColumnDef="siteName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'LABELS.SITE' | translate}} </th>
+            <td mat-cell *matCellDef="let assessment"  class="vertical-align-cell"><mat-chip> {{assessment.siteName}} </mat-chip></td>
+        </ng-container>
+
+
+        <!-- Zone Column -->
+        <ng-container matColumnDef="zone">
+            <th mat-header-cell *matHeaderCellDef>{{'ATTESTATION_BOARD.ASSESSMENT_MANUAL' | translate}} </th>
+            <td mat-cell *matCellDef="let assessment" class="service-list vertical-align-cell">{{assessment.criteriaGroupName}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="startDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="column-width-10">{{'LABELS.START_DATE' | translate}}</th>
+            <td mat-cell *matCellDef="let assessment" class="manual-list column-width-10 vertical-align-cell">
+                <span *ngIf="assessment.startDate">{{assessment.startDate | amUtc | amLocal | amDateFormat:'YYYY-MM-DD HH:mm'}}</span>
+            </td>
+        </ng-container>
+
+        <!-- Date Range Column -->
+        <ng-container matColumnDef="endDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="column-width-10">{{'LABELS.END_DATE' | translate}}</th>
+            <td mat-cell *matCellDef="let assessment" class="manual-list column-width-10 vertical-align-cell">
+                <span *ngIf="assessment.startDate">{{assessment.endDate | amUtc | amLocal | amDateFormat:'YYYY-MM-DD HH:mm'}}</span>
+            </td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef class="column-width-10 padding-left-1"> {{'LABELS.STATUS' | translate}} </th>
+
+            <td mat-cell *matCellDef="let assessment" class="column-width-10 vertical-align-cell">
+                <tr>
+                    <ngx-charts-bar-horizontal-stacked [view]="view" [scheme]="colorScheme" [results]="assessment.criteriaData" [gradient]="gradient"
+                        [xAxis]="showXAxis" [yAxis]="showYAxis" [legend]="showLegend" [showDataLabel]="showDataLabel" [showXAxisLabel]="showXAxisLabel"
+                        [showYAxisLabel]="showYAxisLabel" [trimYAxisTicks]=false [xAxisLabel]="xAxisLabel" [yAxisLabel]="yAxisLabel" (select)="onSelect($event)">
+                        <ng-template #tooltipTemplate let-model="model" class="chart-tooltip">
+                            <h3 class="chart-tool-tip">{{model?.name}}: {{model?.value}}</h3>
+                          </ng-template>
+                    </ngx-charts-bar-horizontal-stacked>
+                </tr>
+                <tr>
+                    <td class="status-indicator">
+                        <div>
+                            {{'LABELS.COMPLETION' | translate}} : {{assessment?.totalMetCount + assessment?.totalUnmetCount + assessment?.totalNotApplicableCount}}/{{assessment?.totalCriteriaCount}}
+                        </div>
+                        <div>
+                            {{'LABELS.MET' | translate}} : {{assessment?.totalMetCount}}/{{assessment?.totalCriteriaCount}}
+                        </div>
+                        <div>
+                            {{'LABELS.UNMET' | translate}} : {{assessment?.totalUnmetCount}}/{{assessment?.totalCriteriaCount}}
+                        </div>
+                        <div>
+                            {{'LABELS.NA' | translate}} : {{assessment?.totalNotApplicableCount}}/{{assessment?.totalCriteriaCount}}
+                        </div>
+                    </td>
+                </tr>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="export">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let assessment">
+                <button mat-icon-button (click)="onExportAssessment(assessment)" class="center-align-contents">
+                    <mat-icon>save_alt</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns" class="header-margin-10"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
+    </mat-table>
+</ng-container>
+<mat-paginator #paginator *ngIf="isDashBoardVisible === false" [length]="resultsLength" [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+
+
+<ng-template #dashBoard>
+    <div class="dash-board-container">
+        <div class="dash-board-labels">
+            <div class="left-container">
+                <div class="dash-board-label">Survey Name:
+                    <div class="dash-board-label-value">
+                        {{ assessmentDetails.name }}
+                    </div>
+                </div>
+                <div class="dash-board-label">Site Name:
+                    <div class="dash-board-label-value">
+                        {{ assessmentDetails.siteName }}
+                    </div>
+                </div>
+            </div>
+            <div class="right-container">
+                <div class="dash-board-label">Start Date:
+                    <div class="dash-board-label-value">
+                        {{ assessmentDetails.startDate | amUtc | amLocal | amDateFormat:'YYYY-MM-DD HH:mm'  }}
+                    </div>
+                </div>
+                <div class="dash-board-label">End Date:
+                    <div class="dash-board-label-value">
+                        {{ assessmentDetails.endDate  | amUtc | amLocal | amDateFormat:'YYYY-MM-DD HH:mm'}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="dash-board-results">
+            <div class="pie-chart">
+                <div class="dash-board-overall-graph-container">
+                    <div class="dash-board-overall-graph">
+                        <div class="dash-board-label">
+                            <label>Overall Survey Ratings</label>
+                            <label style="display: inherit">Survey Completion:
+                                <div class="dash-board-label-value">{{ workDonePercentArr[1] }}</div>
+                            </label>
+                            <label style="display: inherit">Expected Survey Completion:
+                                <div class="dash-board-label-value">{{ workDonePercentArr[0] }}</div>
+                            </label>
+                        </div>
+                        <div class="dash-board-graph">
+                            <ngx-charts-bar-horizontal-stacked [view]="priorityProcessResultView" [scheme]="colorScheme" [results]="assessmentDetails.criteriaData" [gradient]="gradient"
+                                [xAxis]="showXAxis" [yAxis]=true [legend]="showLegend" [showDataLabel]="showDataLabel" [showXAxisLabel]="showXAxisLabel"
+                                [showYAxisLabel]="showYAxisLabel" [xAxisLabel]="xAxisLabel" [yAxisLabel]="yAxisLabel" (select)="onSelect($event)">
+                                <ng-template #tooltipTemplate let-model="model" class="chart-tooltip">
+                                    <h3 class="chart-tool-tip">{{model?.name}}: {{model?.value}}</h3>
+                                </ng-template>
+                            </ngx-charts-bar-horizontal-stacked>
+                        </div>
+                    </div>
+                    <div  class="dash-board-rop-graph">
+                        <ng-container *ngIf="isRopPresent">
+                            <div class="dash-board-label">
+                                <label>ROP Rating</label>
+                            </div>
+                            <div class="dash-board-graph" style="display: block">
+                                <ngx-charts-bar-horizontal-stacked [view]="priorityProcessResultView" [scheme]="colorScheme" [results]="ropResult[0].criteriaData" [gradient]="gradient"
+                                    [xAxis]="showXAxis" [yAxis]=true [legend]="showLegend" [showDataLabel]="showDataLabel" [showXAxisLabel]="showXAxisLabel"
+                                    [showYAxisLabel]="showYAxisLabel" [xAxisLabel]="xAxisLabel" [yAxisLabel]="yAxisLabel" (select)="onSelect($event)">
+                                    <ng-template #tooltipTemplate let-model="model" class="chart-tooltip">
+                                        <h3 class="chart-tool-tip">{{model?.name}}: {{model?.value}}</h3>
+                                    </ng-template>
+                                </ngx-charts-bar-horizontal-stacked>
+                            </div>
+                        </ng-container>
+                        <div *ngIf="!isRopPresent" class="dash-board-error-label">
+                            <label>No ROP is Available</label>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="pie-chart-result">
+                    <div class="pie-chart-result-graph">
+                        <ngx-charts-bar-horizontal
+                                [view]="pieChartView"
+                                [scheme]="resultColorScheme"
+                                [results]="single"
+                                [gradient]="gradient"
+                                [xAxis]="showXAxis"
+                                [yAxis]=true
+                                [legend]=true
+                                [legendPosition]="below"
+                                [showXAxisLabel]="showXAxisLabel"
+                                [showYAxisLabel]="showYAxisLabel"
+                                [xAxisLabel]="xAxisLabel"
+                                [yAxisLabel]="yAxisLabel"
+                                [trimYAxisTicks]=false
+                                (select)="onSelect($event)">
+                        </ngx-charts-bar-horizontal>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="showPriorityProcess" class="dash-board-pp-graph">
+                <div *ngIf="isPriorityPresent" class="dash-board-label">
+                    <label>Priority Process Level Ratings</label>
+                </div>
+                <div *ngIf="isPriorityPresent" class="dash-board-graph">
+                    <ng-container *ngFor="let pp of priorityProcessResult">
+                        <div class="dash-board-pp-results" >
+                            <ngx-charts-bar-horizontal-stacked
+                                    [view]="priorityProcessResultView"
+                                    [scheme]="colorScheme"
+                                    [results]="pp.criteriaData"
+                                    [gradient]="gradient"
+                                    [xAxis]="showXAxis"
+                                    [yAxis]=true
+                                    [showXAxisLabel]="showXAxisLabel"
+                                    [showYAxisLabel]="showYAxisLabel"
+                                    [xAxisLabel]="xAxisLabel"
+                                    [yAxisLabel]="yAxisLabel"
+                                    [trimYAxisTicks]=false
+                                    (select)="onSelect($event)">
+                                <ng-template #tooltipTemplate let-model="model" class="chart-tooltip">
+                                    <h3 class="chart-tool-tip">{{model?.name}}: {{model?.value}}</h3>
+                                </ng-template>
+                            </ngx-charts-bar-horizontal-stacked>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div> -->
+        <ng-container *ngFor="let pp of priorityProcess">
+            <div class="pp-results">
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title style="font-weight: bold">
+                            Priority Process
+                        </mat-panel-title>
+                        <mat-panel-description>
+                        </mat-panel-description>
+                        <!-- <div class="pie-charts"> -->
+                            <!-- </div> -->
+                    </mat-expansion-panel-header>
+                    <div class="drop-down-area">
+                        <div class="chart-container">
+                            <ngx-charts-pie-chart
+                                [view]="pieChartView"
+                                [scheme]="colorScheme"
+                                [results]="single"
+                                [legend]="showLegend"
+                                [explodeSlices]=false
+                                [labels]=true
+                                [doughnut]=true
+                                [gradient]="gradient"
+                                (select)="onSelect($event)">
+                            </ngx-charts-pie-chart>
+
+                        </div>
+                        <div class="legend-details">
+                            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                                <!-- Position Column -->
+                                <ng-container matColumnDef="assessmentMethod">
+                                    <th mat-header-cell *matHeaderCellDef> Assessment Method </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.assessmentMethod}} </td>
+                                </ng-container>
+
+                                <!-- Name Column -->
+                                <ng-container matColumnDef="met">
+                                    <th mat-header-cell *matHeaderCellDef> Met </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.met}} </td>
+                                </ng-container>
+
+                                <!-- Weight Column -->
+                                <ng-container matColumnDef="unmet">
+                                    <th mat-header-cell *matHeaderCellDef> Unmet </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.unmet}} </td>
+                                </ng-container>
+
+                                <!-- Symbol Column -->
+                                <ng-container matColumnDef="GTMet">
+                                    <th mat-header-cell *matHeaderCellDef> GTMet </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.GTMet}} </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="legendColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: legendColumns;"></tr>
+                            </table>
+                        </div>
+                    </div>
+                    <mat-action-row>
+                        <button mat-raised-button color="warn" (click)="commentsDialog()">View Comments</button>
+                    </mat-action-row>
+                </mat-expansion-panel>
+            </div>
+        </ng-container>
+    </div>
+</ng-template>
+
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator, MatSort, MatDialog, MatTableDataSource} from '@angular/material';
+import { AssessmentService } from 'app/services/assessment.service';
+import { AccountService } from 'app/core';
+import 'core-js';
+import { IClinicalService } from 'app/shared/model/clinical-service.model';
+import { ExcelImportService } from 'app/services/excel-import.service';
+import { ClinicalServiceService } from 'app/services/clinical-service.service';
+import { ISite } from 'app/shared/model/site.model';
+import { BehaviorSubject } from 'rxjs';
+import { SiteService } from 'app/services/site.service';
+import { SelectionModel } from '@angular/cdk/collections';
+import { ToastrService } from 'ngx-toastr';
+import { Utils } from 'app/common/utils';
+import { FormControl } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { createTrue } from 'typescript';
+import { CommentDialogComponent } from './dialog/comment-dialog/comment-dialog.component';
+
+export class ResultsFilters {
+    public siteName?: string;
+    public organizationCode?: string;
+    public clinicalServiceId = 0;
+    public zone = 0;
+    public sector = 0;
+}
+
+@Component({
+    selector: 'hso-results',
+    templateUrl: './results.component.html',
+    styleUrls: ['results.scss']
+})
+export class ResultsComponent implements OnInit {
+
+    displayedColumns: string[] = ['select', 'name', 'siteName', 'zone', 'startDate', 'endDate', 'status', 'export'];
+    data: MatTableDataSource<any>;
+    selection = new SelectionModel<any>(true, []);
+    isLoadingResults = false;
+    resultsLength = 0;
+    isReseted = false;
+    loggedUserId: number;
+    clinicalServices: IClinicalService[] = [];
+    filterData: ResultsFilters = new ResultsFilters();
+    selectedSites = [] as ISite[];
+    selectedServices = [] as IClinicalService[];
+    completableServices = new BehaviorSubject<IClinicalService[]>([]);
+    completableSites = new BehaviorSubject<ISite[]>([]);
+    assessmentDetailsId: any = '';
+    selectedFilters = [];
+    isROP: any = '';
+    assessmentDetails: any;
+    isDashBoardVisible = false;
+    // isReportViewSelected = false;
+    selectedFilter = [];
+    priorityProcessResult = {crietriaData: []};
+    showPriorityProcess = false;
+    selectedReport: string;
+    ropResult = {criteriaData: []};
+    isRopPresent: any;
+    isPriorityPresent: boolean;
+    overallCompletedResult: number;
+    ropCompletedResult: number;
+    priorityProcessCompletedResult: number;
+    workDonePercentArr = [];
+    expectedWorkDonePercent: number;
+    priorityProcess: any = [];
+
+    view: any[] = [350, 50];
+    priorityProcessResultView: any[] = [700, 75];
+    pieChartView: any[] = [700, 300];
+    // options
+
+    zones = [];
+    sectors = [];
+
+    showXAxis = false;
+    showYAxis = false;
+    gradient = false;
+    showLegend = false;
+    showXAxisLabel = true;
+    showDataLabel = false;
+    xAxisLabel = '';
+    showYAxisLabel = false;
+    yAxisLabel = '';
+    trimYAxisTicks = true;
+    trimXAxisTicks = true;
+
+    pieChartResult = [
+        {
+          'name': 'Germany',
+          'value': 8940000
+        },
+        {
+          'name': 'USA',
+          'value': 5000000
+        },
+        {
+          'name': 'France',
+          'value': 7200000
+        }
+      ];
+
+    colorScheme = {
+        domain: ['#5AA454', '#A10A28', '#C7B42C', '#888888']
+    };
+
+    resultColorScheme = {
+        domain: ['#5AA454', '#A10A28']
+    };
+
+    ELEMENT_DATA: any = [
+        {assessmentMethod: 'On-site', met: 12, unmet: 4, GTMet: '75%'},
+        {assessmentMethod: 'Attestation', met: 7, unmet: 0, GTMet: '100%'},
+        {assessmentMethod: 'Audited', met: 5, unmet: 0, GTMet: '100%'},
+        {assessmentMethod: 'Total', met: 24, unmet: 4, GTMet: '85%'},
+      ];
+    legendColumns: string[] = ['assessmentMethod', 'met', 'unmet', 'GTMet'];
+    dataSource = this.ELEMENT_DATA;
+
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+
+    constructor(private assementService: AssessmentService,
+        public accountService: AccountService,
+        public excelImportService: ExcelImportService,
+        private clinicalServiceService: ClinicalServiceService,
+        private siteService: SiteService,
+        private dialog: MatDialog,
+        private utils: Utils,
+        private toastr: ToastrService) { }
+
+    ngOnInit() {
+        this.getAllClinicalServices();
+        this.getAllAttestationForUser(); // todo:need to find a alternate way to get the account details
+        this.priorityProcess = ['1', '2', '3', '4', '5'];
+    }
+
+    isAllSelected() {
+        const numSelected = this.selection.selected.length;
+        const numRows = this.data.data.length;
+        return numSelected === numRows;
+    }
+
+    masterToggle() {
+        this.isAllSelected() ?
+            this.selection.clear() :
+            this.data.data.forEach(row => this.selection.select(row));
+      }
+
+    displaySite(site?: ISite): string {
+        return site ? site.name : '';
+    }
+
+    updateCompletableSites(prefix: string): void {
+        if (prefix.length < 3) {
+            this.completableSites.next([]);
+        } else {
+            this.siteService.findByNameIgnoreCaseContaining(prefix)
+                .subscribe(response => {
+                    this.completableSites.next(response.body._embedded.sites);
+                });
+        }
+    }
+
+    getAllClinicalServices() {
+        this.clinicalServiceService.query({
+            size: 5000, // temporarily to get data, need to expose an api to fetch all
+            sort: 'name,asc'
+        }).subscribe(data => {
+            this.clinicalServices = data.body['content'];
+        });
+    }
+
+    onExportAssessment(assessment?) {
+
+        if (!assessment && this.selection.selected.length === 0) {
+            this.toastr.error('', 'Please select atleast one attestation to export!');
+            return;
+        }
+        let assessmentIds = [];
+        let siteIds = [];
+        if (this.selection.selected.length !== 0) {
+            this.selection.selected.forEach(assmt => assessmentIds.push(assmt.assessmentId));
+            this.selection.selected.forEach(assmt => siteIds.push(assmt.siteId));
+        } else if (assessment && assessment.assessmentId) {
+            assessmentIds.push(assessment.assessmentId);
+            siteIds.push(assessment.siteId);
+        } else {
+            assessmentIds = null;
+        }
+
+        this.assementService.getAssessmentsToExport({assessmentId: assessmentIds, siteId: siteIds}).subscribe(
+            (res: any) => {
+                this.selection.clear();
+                this.excelImportService.exportAsExcelFile(res.body, 'Attestation results');
+            }
+        );
+    }
+
+    updateCompletableServices(prefix: string): void {
+        if (prefix.length < 3) {
+            this.completableServices.next([]);
+        } else {
+            const filtertedClinicalServices = this.clinicalServices.filter(item => this.utils.containsIgnoreCase(item.name, prefix));
+            this.completableServices.next(filtertedClinicalServices);
+        }
+    }
+
+    onSitesDataChange(prefix) {
+        this.updateCompletableSites(prefix);
+    }
+
+    onServicesDataChange(prefix) {
+        this.updateCompletableServices(prefix);
+    }
+
+    onFilterSites(selectedSites) {
+        // this.isReseted = false;
+        this.selectedSites = selectedSites;
+        if (this.isReseted && this.selectedServices.length === 0) {
+            this.cbsOnResetAssessmentFilter();
+        }
+    }
+
+    onFilterServices(selectedServices) {
+        this.selectedServices = selectedServices;
+        if (this.isReseted && this.selectedSites.length === 0) {
+            this.cbsOnResetAssessmentFilter();
+        }
+    }
+
+    onApplyAssessmentFilter() {
+
+        if (this.isDashBoardVisible) {
+
+            if (this.selectedReport === 'ROP' || this.selectedReport === 'Overall') {
+                this.siteDetails(this.assessmentDetails.assessmentId, this.assessmentDetails);
+            }
+            if (this.selectedReport === 'Priority Process') {
+                this.assementService.getPriortiyProcessResult(
+                    {
+                        siteName: this.assessmentDetails.siteName.length > 0 ? this.assessmentDetails.siteName : '',
+                        assessmentId: this.assessmentDetailsId,
+                        page: 0,
+                        size: 100,
+                    })
+                    .subscribe(data => {
+                        this.showPriorityProcess = true;
+                        const response: any = data.body['content'];
+                        this.isPriorityPresent = response.length > 0 ? true : false;
+                        response.forEach(e => {
+                            if (e.priorityProcessName != null) {
+                                e.criteriaData = [];
+                                e.criteriaData.push(
+                                    {
+                                        'name': e.priorityProcessName,
+                                        'series': [
+                                            { 'name': 'Met', 'value': e.totalMetCount },
+                                            { 'name': 'Unmet', 'value': e.totalUnmetCount },
+                                            { 'name': 'Not Applicable', 'value': e.totalNotApplicableCount },
+                                            { 'name': 'Remaining Criteria', 'value': e.totalCriteriaCount - (e.totalMetCount + e.totalUnmetCount + e.totalNotApplicableCount) }
+                                        ]
+                                    });
+                                }
+                            });
+                            this.priorityProcessResult = response;
+                        });
+            }
+        }
+
+        this.isROP = true;
+        this.getAllAttestationForUser();
+    }
+
+    onResetAssessmentFilter() {
+        this.isReseted = true;
+        // Call back event will be triggered from chip select component, once all the chip select component has been reseted.
+    }
+
+    cbsOnResetAssessmentFilter() {
+        this.isReseted = false;
+        this.paginator.pageIndex = 0;
+        this.filterData = new ResultsFilters();
+        this.selectedSites = [];
+        this.selectedServices = [];
+        this.getAllAttestationForUser();
+    }
+
+    getResetStatus() {
+        if (this.selectedSites.length === 0 &&  this.selectedServices.length === 0 && JSON.stringify(this.filterData) === JSON.stringify(new ResultsFilters())) {
+            return true;
+        }
+        return false;
+    }
+
+    getAllAttestationForUser() {
+
+        this.assementService.getAllUserAttestation(
+            {
+                siteName: this.selectedSites.length > 0 ? this.selectedSites[0].name : '',
+                servicesId: this.selectedServices.length > 0 ? this.selectedServices[0].id : '',
+                assessmentId: this.assessmentDetailsId,
+                isROP: this.isROP,
+                // page: this.paginator.pageIndex,
+                page: 0,
+                size: 100,
+                // size: this.paginator.pageSize,
+                // sort: 'siteName,asc',
+            }
+        ).subscribe(data => {
+            this.resultsLength = data.body.totalElements;
+            const response: any = data.body.content;
+            response.forEach(e => {
+                e.criteriaData = [];
+                e.criteriaData.push(
+                    {
+                        'name': 'Status',
+                        'series': [
+                            { 'name': 'Met', 'value': e.totalMetCount },
+                            { 'name': 'Unmet', 'value': e.totalUnmetCount },
+                            { 'name': 'Not Applicable', 'value': e.totalNotApplicableCount },
+                            // { 'name': 'Not Rated', 'value': e.totalNotRatedCount },
+                            { 'name': 'Remaining Criteria', 'value': e.totalCriteriaCount - (e.totalMetCount + e.totalUnmetCount + e.totalNotApplicableCount) }
+                        ]
+                    }
+                );
+            });
+            this.data = new MatTableDataSource(response);
+            this.data.sort = this.sort;
+            this.data.paginator = this.paginator;
+            this.data.sortingDataAccessor = (dataset, header) => dataset[header];
+        });
+    }
+
+    onSelect(event) {
+    }
+
+    siteDetails(assessmentId: number, assessment: any) {
+
+        this.selectedReport = 'Overall';
+        this.isPriorityPresent = false;
+        this.assessmentDetails = assessment;
+        this.completedDetails(this.assessmentDetails);
+        this.isDashBoardVisible = true;
+        const name = this.assessmentDetails.siteName;
+        this.completableSites.next([{name}]);
+        // this.isReportViewSelected = true;
+        this.assessmentDetailsId = assessment.assessmentId;
+        this.getAllAttestationForUser();
+        this.assementService.getROPResult({
+            siteName: assessment.siteName,
+            isROP: true,
+            page: 0,
+            size: '',
+            serviceId: '',
+            assessmentId: assessment.assessmentId
+            }).subscribe(data => {
+                const response = data.body.content;
+                this.isRopPresent = response.length > 0 ? true : false;
+                response.forEach(e => {
+                    e.criteriaData = [];
+                    e.criteriaData.push(
+                        {
+                            'name': 'Status',
+                            'series': [
+                                { 'name': 'Met', 'value': e.totalMetCount },
+                                { 'name': 'Unmet', 'value': e.totalUnmetCount },
+                                { 'name': 'Not Applicable', 'value': e.totalNotApplicableCount },
+                                // { 'name': 'Not Rated', 'value': e.totalNotRatedCount },
+                                { 'name': 'Remaining Criteria', 'value': e.totalCriteriaCount - (e.totalMetCount + e.totalUnmetCount + e.totalNotApplicableCount) }
+                            ]
+                        }
+                    );
+                    this.ropResult = response;
+                });
+            });
+    }
+
+    onBackAssessmentPage() {
+        this.workDonePercentArr = [];
+        this.isDashBoardVisible = false;
+        this.assessmentDetailsId = '';
+        // this.isReportViewSelected = false;
+        this.isROP = '';
+        this.showPriorityProcess = false;
+        this.selectedReport = '';
+        this.getAllAttestationForUser();
+    }
+
+    calculateDiffDays(startDate, endDate) {
+
+        const ONE_DAY = 1000 * 60 * 60 * 24;
+        const startDate_ms = startDate.getTime();
+        const endDate_ms = endDate.getTime();
+        const difference_ms = Math.abs(startDate_ms - endDate_ms);
+        return Math.round(difference_ms / ONE_DAY);
+    }
+
+    calculateProgress(totalCriteria, completedCriteria, startDate, endDate) {
+
+        const diffDays = this.calculateDiffDays(startDate, endDate);
+        const completedDays = this.calculateDiffDays(new Date(), endDate);
+        const workPercentPerDay = ((totalCriteria / diffDays) / totalCriteria) * 100;
+        const workDonePercent = (completedCriteria / totalCriteria) * 100;
+        if (new Date() > endDate) {
+            this.expectedWorkDonePercent = 100;
+        } else {
+            this.expectedWorkDonePercent = 100 - (completedDays * workPercentPerDay);
+        }
+        this.workDonePercentArr.push(Math.round(this.expectedWorkDonePercent) + '%');
+        this.workDonePercentArr.push(Math.round(workDonePercent) + '%');
+        this.single = [
+            {
+              'name': 'Survey Completion',
+              'value': Math.round(workDonePercent)
+            },
+            {
+              'name': 'Expected Survey Completion',
+              'value': Math.round(this.expectedWorkDonePercent)
+            }
+        ];
+    }
+
+    completedDetails(assessment: any) {
+
+        // const startDate = Date.parse(assessment.startDate);
+        // const endDate = Date.parse(assessment.endDate);
+        const startDate = new Date(assessment.startDate.split('T')[0]);
+        const endDate = new Date(assessment.endDate.split('T')[0]);
+        const totalCriteriaCount = assessment.totalCriteriaCount;
+        const completedCriteria = assessment.totalMetCount + assessment.totalUnmetCount + assessment.totalNotApplicableCount;
+        const totalCompleted = this.calculateProgress(totalCriteriaCount, completedCriteria, startDate, endDate);
+    }
+
+    commentsDialog() {
+        const commentDialogRef = this.dialog.open(CommentDialogComponent, {
+            width: '80%',
+            height: '80%'
+        });
+    }
+    
+    
+    import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+import { StructureSharedModule } from 'app/shared';
+import { ExcelImportService } from 'app/services/excel-import.service';
+import { RESULTS_ROUTE, ResultsComponent } from './';
+import { ChipSelectModule } from 'app/common/chip-select/chip-select.moudle';
+
+import { MatChipsModule } from '@angular/material/chips';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTableModule } from '@angular/material/table';
+import { CommentDialogComponent } from './dialog/comment-dialog/comment-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+
+@NgModule({
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        StructureSharedModule,
+        MatChipsModule,
+        MatCheckboxModule,
+        MatExpansionModule,
+        MatDialogModule,
+        MatTableModule,
+        ChipSelectModule,
+        RouterModule.forChild([RESULTS_ROUTE]),
+    ],
+    declarations: [ResultsComponent, CommentDialogComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    providers: [ExcelImportService],
+    entryComponents: [ CommentDialogComponent ]
+})
+export class ResultsModule { }
+
+
+}
+
+
+import { Route } from '@angular/router';
+
+import { UserRouteAccessService } from 'app/core';
+import { ResultsComponent } from 'app/results/results.component';
+
+export const RESULTS_ROUTE: Route = {
+    path: '',
+    component: ResultsComponent,
+    data: {
+        authorities: ['ROLE_USER'],
+        pageTitle: "{{'RESULTS' | translate}}"
+    },
+    canActivate: [UserRouteAccessService]
+};
+
+
+/* ==========================================================================
+Attestation Board page styles
+========================================================================== */
+@import '../../content/scss/colours.scss';
+table {
+    width: 100%;
+}
+
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+td,
+th {
+    width: 25%;
+}
+
+.instructions {
+    margin-right: 20px;
+}
+
+.filter {
+    margin-top: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.mat-column-site {
+    flex: 0 1 auto;
+    width: 30% !important;
+}
+.export-all {
+    float: right;
+    width: 150px !important;
+}
+.export {
+    // color: #2f2f84;
+    // border-bottom: 1px solid #2f2f84;
+    cursor: pointer;
+}
+
+.mat-column-zone {
+    width: 15% !important;
+}
+
+.mat-column-status {
+    width: 25% !important;
+}
+.mat-column-export {
+    width: 20% !important;
+}
+
+.mat-raised-button {
+    background-color: $hso-dark-grey;
+    color: white;
+}
+
+.service-list {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.loading-shade {
+    margin-left: 20px;
+}
+
+//::ng-deep .mat-checkbox .mat-checkbox-frame {
+//    border-color: grey;
+//}
+
+::ng-deep .mat-checkbox-checked .mat-checkbox-background {
+    background-color: rgba(46, 163, 242, 0.87) !important;
+}
+
+::ng-deep .mat-checkbox-indeterminate .mat-checkbox-background {
+    background-color: rgba(46, 163, 242, 0.87) !important;
+}
+.status-indicator {
+    padding-left: 6%;
+    font-size: 0.8em;
+    font-weight: 500;
+}
+
+.filter-button {
+    margin-left: 10px;
+}
+
+.mat-chip-list-wrapper {
+    display: unset !important;
+}
+
+.site-chip {
+    flex:0 !important;
+}
+
+mat-cell, .mat-header-cell{
+    overflow: visible;
+}
+
+.column-width-10 {
+    width: 10% !important;
+}
+
+mat-header-cell.mat-header-cell.cdk-column-select.mat-column-select.ng-star-inserted {
+    margin: 25%;
+}
+
+.header-margin-10 {
+    margin: 10%;
+}
+.chart-tool-tip {
+    color: white;
+    font-family: Roboto, "Helvetica Neue", sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 400 !important;
+}
+
+.class-width-100 {
+    width:150px !important;
+}
+
+.center-align-contents {
+    display: block;
+    margin: auto;
+}
+
+.padding-left-1 {
+    padding-left: 1% !important;
+}
+
+th.mat-header-cell {
+    padding: 1.25% 0 0 0;
+}
+
+.column-width-5 {
+    width: 5%;
+}
+
+.vertical-align-cell {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.assessment-name-cell {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.dash-board-container {
+    display: flex;
+    flex-direction: column;
+    // border: 1px solid black;
+    margin-top: 2%;
+    margin-left: 2%;
+    margin-right: 2%;
+    .dash-board-labels {
+        border: 1px solid black;
+        flex-direction: row;
+        display: flex;
+        flex-grow: 1;
+        .left-container {
+            display: flex;
+            flex-basis: 50%;
+            flex-direction: column;
+            flex-grow: 1;
+            .dash-board-label {
+                display: flex;
+                flex-direction: row;
+                padding-top: 3%;
+                padding-left: 3%;
+                padding-bottom: 3%;
+                font-weight: bold;
+                .dash-board-label-value {
+                    display: flex;
+                    flex-basis: 50%;
+                    padding-left: 2%;
+                    font-weight: normal;
+                }
+            }
+        }
+        .right-container {
+            display: flex;
+            flex-basis:50%;
+            flex-direction: column;
+            flex-grow: 1;
+            .dash-board-label {
+                display: flex;
+                flex-direction: row;
+                padding-top: 3%;
+                padding-left: 3%;
+                padding-bottom: 3%;
+                font-weight: bold;
+                .dash-board-label-value {
+                    display: flex;
+                    flex-basis: 50%;
+                    padding-left: 2%;
+                    font-weight: normal;
+                }
+            }
+        }
+    }
+    .dash-board-results {
+        display: flex;
+        flex-direction: column;
+        border: 1px solid black;
+        margin-top: 2%;
+        .pie-chart {
+            display: flex;
+            flex-direction: row;
+            // border-left: 1px solid black;
+            .dash-board-overall-graph-container {
+                display: flex;
+                flex-direction: column;
+                width: 50%;
+                border-right: 1px solid black;
+                .dash-board-overall-graph {
+                    display: flex;
+                    flex-direction: column;
+                    font-weight: bold;
+                    flex-basis: 50%;
+                    // width: 50%;
+                    .dash-board-label {
+                        // border: 1px solid black;
+                        display: flex;
+                        flex-direction: row;
+                        font-weight: bold;
+                        justify-content: space-between;
+                        padding-top: 3%;
+                        padding-bottom: 3%;
+                        margin-left: 3%;
+                        margin-right: 3%;
+                        .dash-board-label-value {
+                            // padding-left: 2%;
+                            font-weight: normal;
+                        }
+                    }
+                    .dash-board-graph {
+                        margin-right: 2%;
+                    }
+                }
+                .dash-board-rop-graph {
+                    display: flex;
+                    flex-direction: column;
+                    font-weight: bold;
+                    // width: 50%;
+                    // border-right: 1px solid black;
+                    flex-basis: 50%;
+                    .dash-board-label {
+                        display: flex;
+                        flex-direction: row;
+                        font-weight: bold;
+                        justify-content: left;
+                        padding-top: 3%;
+                        padding-bottom: 3%;
+                        margin-left: 3%;
+                        margin-right: 3%;
+                        .dash-board-label-value {
+                            display: flex;
+                            // padding-left: 2%;
+                            font-weight: normal;
+                        }
+                    }
+                    .dash-board-graph {
+                        margin-right: 2%;
+                    }
+                }
+            }
+            .pie-chart-result {
+                display: flex;
+                width: 50%;
+                // border-left: 0.5px solid black;
+                justify-content: center;
+                .pie-chart-result-graph {
+                    padding-top: 2%;
+                }
+
+            }
+        }
+        .dash-board-pp-graph {
+            display: flex;
+            flex-direction: column;
+            border-top: 1px solid black;
+            .dash-board-label {
+                display: flex;
+                flex-direction: row;
+                font-weight: bold;
+                justify-content: space-between;
+                padding-top: 3%;
+                padding-bottom: 3%;
+                margin-left: 3%;
+                margin-right: 3%;
+                .dash-board-label-value {
+                    font-weight: normal;
+                }
+            }
+            .dash-board-graph {
+                // margin-right: 2%;
+            }
+        }
+    }
+}
+.dash-board-error-label {
+    padding-top: 3%;
+    padding-left: 3%;
+    padding-bottom: 3%;
+    font-weight: bold;
+}
+.back-button {
+    margin-right: 3%;
+}
+.label-value {
+    font-weight: normal;
+}
+
+.drop-down-area {
+    display: flex;
+    // border: 1px solid black;
+}
+
+.chart-container {
+    // border: 1px solid black;
+    flex: 1;
+}
+
+.legend-details {
+    flex: 1;
+    // border: 1px solid black;
+}
+
+.legend-details {
+    padding-top: 2%;
+    .mat-table {
+        .mat-header-cell {
+            background-color: black;
+            color: white !important;
+            justify-content: center;
+            text-align: center;
+        }
+        .mat-cell {
+             text-align: center;
+        }
+    }
+}
+.pp-results {
+    margin-top: 2%;
+}
+
+
+
